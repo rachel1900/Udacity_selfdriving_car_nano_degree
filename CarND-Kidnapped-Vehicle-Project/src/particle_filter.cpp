@@ -6,7 +6,6 @@
  */
 
 #include "particle_filter.h"
-
 #include <math.h>
 #include <algorithm>
 #include <iostream>
@@ -118,7 +117,7 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
    */
     
     
-    for (int i=0; i< observations.size(); i++){
+    for (unsigned int i=0; i< observations.size(); i++){
         LandmarkObs landmark_obs = observations[i]; // read the Local (vehicle coords)  position of landmark observation
         
         // (initiallize distance value)
@@ -127,7 +126,7 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
         //set -1 as initiallied map id
         int map_id = -1;
         
-        for(int j =0 ; j < predicted.size(); j++){
+        for(unsigned int j =0 ; j < predicted.size(); j++){
             LandmarkObs landmark_predicted = predicted[i]; // predicted Vector of predicted landmark observations
             
             // calculate RSME of this position
@@ -169,7 +168,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
         // transform each observation marker from the vehicle's coordinates
         // to the map's coordinates, with respect to our particle.
         vector<LandmarkObs> transformed_obs;
-        for(int j=0; j< observations.size();j++){
+        for(unsigned int j=0; j< observations.size();j++){
             // Homogenous Transformation Matrix
             double homogenous_tf_x = cos(particles[i].theta)* observations[j].x
                                     -sin(particles[i].theta)*observations[j].y
@@ -185,7 +184,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
         // Step 2: associate each transformed observation with a land mark identifier finde the nearest neighbor （only consider the landmarks within sensor_range）
         // for each particle create a vector to hold the map landmark that located within sensor range
         vector<LandmarkObs> landmark_selected;
-        for (int m=0; m<map_landmarks.landmark_list.size(); m++){
+        for (unsigned int m=0; m<map_landmarks.landmark_list.size(); m++){
             if (fabs(map_landmarks.landmark_list[m].x_f - particles[i].x) <= sensor_range
                 &&
                 fabs(map_landmarks.landmark_list[m].y_f - particles[i].y)){
@@ -199,8 +198,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     
         // Step 3: update weight
         
-        for (int k=0; k<transformed_obs.size();k++){
-            for (int h=0; h<landmark_selected.size();h++){
+        for (unsigned int k=0; k<transformed_obs.size();k++){
+            for (unsigned int h=0; h<landmark_selected.size();h++){
                 // check if the landmark_selected and transformed_obs are paired
                 if (landmark_selected[h].id == transformed_obs[k].id){
                     // Multivariate-Gaussian probability
@@ -240,7 +239,7 @@ void ParticleFilter::resample() {
     vector<double> weight_values;
 
     // get weihts of particles
-    for (int i=0; i<particles.size();i++){
+    for (unsigned int i=0; i<particles.size();i++){
         weight_values.push_back(particles[i].weight);
     }
     
